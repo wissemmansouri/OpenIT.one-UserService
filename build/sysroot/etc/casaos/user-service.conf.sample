@@ -1,0 +1,9 @@
+[common]
+RuntimePath=/var/run/openit
+
+[app]
+LogPath = /var/log/openit
+LogSaveName = user-service
+LogFileExt = log
+DBPath     = /var/lib/openit/db
+UserDataPath = /var/lib/openit
