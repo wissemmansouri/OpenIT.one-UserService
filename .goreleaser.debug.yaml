@@ -144,7 +144,7 @@ changelog:
       - "^test:"
 release:
   github:
-    owner: IceWhaleTech
+    owner: wissemmansouri
     name: OpenIT.one-UserService
   draft: true
   prerelease: auto
