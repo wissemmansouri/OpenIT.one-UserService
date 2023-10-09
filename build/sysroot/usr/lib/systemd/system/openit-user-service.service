@@ -1,0 +1,13 @@
+[Unit]
+After=openit-message-bus.service
+Description=OpenIT.one User Service
+
+[Service]
+ExecStartPre=/usr/bin/openit-user-service -v
+ExecStart=/usr/bin/openit-user-service -c /etc/openit/user-service.conf
+PIDFile=/var/run/openit/user-service.pid
+Restart=always
+Type=notify
+
+[Install]
+WantedBy=multi-user.target
