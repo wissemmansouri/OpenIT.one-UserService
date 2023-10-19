@@ -1,4 +1,4 @@
-module github.com/IceWhaleTech/CasaOS-UserService
+module github.com/wissemmansouri/OpenIT.one-UserService
 
 go 1.20
 
