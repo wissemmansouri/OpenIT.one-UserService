@@ -3,7 +3,7 @@ openapi: 3.0.3
 info:
   title: OpenIT.one User Service API
   version: v2
-  description: |
+  description: |   
    
      This is the API for the OpenIT.one User Service.
      It is used to manage users and their access to OpenIT.one services.
