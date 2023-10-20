@@ -7,7 +7,7 @@ import (
 	"os"
 
 	interfaces "github.com/wissemmansouri/OpenIT.one-Common"
-	"github.com/wisemmansouri/OpenIT.one-Common/utils/systemctl"
+	"github.com/wissemmansouri/OpenIT.one-Common/utils/systemctl"
 	"github.com/wissemmansouri/OpenIT.one-UserService/common"
 )
 
