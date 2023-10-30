@@ -26,7 +26,6 @@ jobs:
         run: |
           git config --global user.email "wissemans96@gmail.com"
           git config --global user.name "wissemmansouri"
-          git config --global credential.helper store --file ~/.git-credentials
           echo "https://username:${{ secrets.GIT_TOKEN }}@github.com" > ~/.git-credentials
         shell: bash
       - name: Run coverage
