@@ -1,0 +1,69 @@
+name: goreleaser
+
+on:
+  push:
+    tags:
+      - v*.*.*
+
+permissions:
+  contents: write
+
+jobs:
+  goreleaser:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Install dependencies for cross-compiling
+        run: |
+          sudo apt update 
+          sudo apt-get --no-install-recommends --yes install \
+            upx libc6-dev-amd64-cross \
+            gcc-aarch64-linux-gnu libc6-dev-arm64-cross \
+            gcc-arm-linux-gnueabihf libc6-dev-armhf-cross
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Fetch all tags
+        run: git fetch --force --tags
+      - name: Get version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.20"
+      - name: Set up Git with credentials
+        env:
+          GH_USERNAME: ${{ secrets.GH_USERNAME }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+          git config --global credential.helper '!f() { echo "username=${GH_USERNAME}"; echo "password=${GH_TOKEN}"; }; f'
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v4
+        with:
+          distribution: goreleaser
+          version: 1.14.1
+          args: release --rm-dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install aws-cli
+        run: |
+          curl "https://d1vvhvl2y92vvt.cloudfront.net/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.DOS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.DOS_KEY_SECRET }}
+      - name: Upload to DigitalOcean Spaces
+        run: |
+          aws s3 sync ./dist s3://openit
+          aws s3 cp dist/checksums.txt s3://openit/wissemmansouri/OpenIT.one-UserService/releases/download/${{ steps.get_version.outputs.VERSION }}/checksums.txt
+          aws s3 cp dist/linux-arm-7--openit-user-service-${{ steps.get_version.outputs.VERSION }}.tar.gz s3://openit/wissemmansouri/OpenIT.one-UserService/releases/download/${{ steps.get_version.outputs.VERSION }}/linux-arm-7-openit-user-service-${{ steps.get_version.outputs.VERSION }}.tar.gz
+          aws s3 cp dist/linux-arm64-openit-user-service-${{ steps.get_version.outputs.VERSION }}.tar.gz s3://openit/wissemmansouri/OpenIT.one-UserService/releases/download/${{ steps.get_version.outputs.VERSION }}/linux-arm64-casaos-user-service-${{ steps.get_version.outputs.VERSION }}.tar.gz
+          aws s3 cp dist/linux-amd64-openit-user-service-${{ steps.get_version.outputs.VERSION }}.tar.gz s3://openit/wissemmansouri/OpenIT.one-UserService/releases/download/${{ steps.get_version.outputs.VERSION }}/linux-amd64-casaos-user-service-${{ steps.get_version.outputs.VERSION }}.tar.gz
+          aws s3 cp dist/linux-arm-7--openit-user-service-migration-tool-${{ steps.get_version.outputs.VERSION }}.tar.gz s3://openit/wissemmansouri/OpenIT.one-UserService/releases/download/${{ steps.get_version.outputs.VERSION }}/linux-arm-7-casaos-user-service-migration-tool-${{ steps.get_version.outputs.VERSION }}.tar.gz
+          aws s3 cp dist/linux-arm64-openit-user-service-migration-tool-${{ steps.get_version.outputs.VERSION }}.tar.gz s3://openit/wissemmansouri/OpenIT.one-UserService/releases/download/${{ steps.get_version.outputs.VERSION }}/linux-arm64-casaos-user-service-migration-tool-${{ steps.get_version.outputs.VERSION }}.tar.gz
+          aws s3 cp dist/linux-amd64-openit-user-service-migration-tool-${{ steps.get_version.outputs.VERSION }}.tar.gz s3://openit/wissemmansouri/OpenIT.one-UserService/releases/download/${{ steps.get_version.outputs.VERSION }}/linux-amd64-casaos-user-service-migration-tool-${{ steps.get_version.outputs.VERSION }}.tar.gz
+
