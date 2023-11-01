@@ -13,6 +13,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/coreos/go-systemd/daemon"
 	"github.com/wissemmansouri/OpenIT.one-Common/external"
 	"github.com/wissemmansouri/OpenIT.one-Common/model"
 	util_http "github.com/wissemmansouri/OpenIT.one-Common/utils/http"
@@ -20,12 +21,11 @@ import (
 	"github.com/wissemmansouri/OpenIT.one-Common/utils/logger"
 	"github.com/wissemmansouri/OpenIT.one-UserService/common"
 	"github.com/wissemmansouri/OpenIT.one-UserService/pkg/config"
-	"github.com/wissemansouri/OpenIT.one-UserService/pkg/sqlite"
+	"github.com/wissemmansouri/OpenIT.one-UserService/pkg/sqlite"
 	"github.com/wissemmansouri/OpenIT.one-UserService/pkg/utils/encryption"
 	"github.com/wissemmansouri/OpenIT.one-UserService/pkg/utils/random"
 	"github.com/wissemmansouri/OpenIT.one-UserService/route"
 	"github.com/wissemmansouri/OpenIT.one-UserService/service"
-	"github.com/coreos/go-systemd/daemon"
 	"go.uber.org/zap"
 )
 
